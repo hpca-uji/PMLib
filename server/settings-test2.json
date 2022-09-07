@@ -1,0 +1,53 @@
+{
+	"server_ip"    : "127.0.0.1",
+	"server_port"  : 6526,
+	"log_filename" : "/opt/pmlib/log/powermeter.log",
+
+    "computers" : {
+        "AMD-1" :    { "ip" : "0.0.0.0" },
+        "AMD-2" :    { "ip" : "0.0.0.0" },
+        "AMD-3" :    { "ip" : "0.0.0.0" },
+        "AMD-4" :    { "ip" : "0.0.0.0" },
+        "AMD-5" :    { "ip" : "0.0.0.0" },
+        "Intel-1" :  { "ip" : "0.0.0.0" },
+        "Intel-2" :  { "ip" : "0.0.0.0" },
+        "Intel-3" :  { "ip" : "0.0.0.0" },
+        "Intel-4" :  { "ip" : "0.0.0.0" },
+        "Intel-5" :  { "ip" : "0.0.0.0" },
+        "Switch" :   { "ip" : "0.0.0.0" },
+        "NAS-1" :    { "ip" : "0.0.0.0" },
+        "Frontend" : { "ip" : "0.0.0.0" }
+   	},
+
+    "devices" : {
+        "WattsUp-1" : { "type" : "WattsUp", "url": "/dev/ttyUSB0", "max_freq" : 1,
+            "lines" : { 
+                "offsetutlet 1" : { "number" : 0, "computer" : "Intel-2", "voltage" : 220, "description" : "" }
+            }
+        },        
+        "LGM450-1" : { "type" : "LMG450", "url": "/dev/ttyUSB0", "max_freq" : 20,
+            "lines" : { 
+                "Outlet 1" : { "number" : 0, "computer" : "Intel-2", "voltage" : 220, "description" : "" },
+                "Outlet 2" : { "number" : 1, "computer" : "Intel-1", "voltage" : 220, "description" : "" },
+                "Outlet 3" : { "number" : 2, "computer" : "AMD-1",   "voltage" : 220, "description" : "" },
+                "Outlet 4" : { "number" : 3, "computer" : "AMD-2",   "voltage" : 220, "description" : "" }
+            }
+        },
+        "LGM450-2" : { "type" : "LMG450", "url": "/dev/ttyUSB1", "max_freq" : 20,
+            "lines" : { 
+                "Outlet 1" : { "number" : 0, "computer" : "Intel-2", "voltage" : 220, "description" : "" },
+                "Outlet 2" : { "number" : 1, "computer" : "Intel-1", "voltage" : 220, "description" : "" },
+                "Outlet 3" : { "number" : 2, "computer" : "AMD-1",   "voltage" : 220, "description" : "" },
+                "Outlet 4" : { "number" : 3, "computer" : "AMD-2",   "voltage" : 220, "description" : "" }
+            }
+        },
+        "LGM450-3" : { "type" : "LMG450", "url": "/dev/ttyUSB2", "max_freq" : 20,
+            "lines" : { 
+                "Outlet 1" : { "number" : 0, "computer" : "Intel-2", "voltage" : 220, "description" : "" },
+                "Outlet 2" : { "number" : 1, "computer" : "Intel-1", "voltage" : 220, "description" : "" },
+                "Outlet 3" : { "number" : 2, "computer" : "AMD-1",   "voltage" : 220, "description" : "" },
+                "Outlet 4" : { "number" : 3, "computer" : "AMD-2",   "voltage" : 220, "description" : "" }
+            }
+        }
+    }
+}

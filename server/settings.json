@@ -1,0 +1,23 @@
+{
+	"server_ip"    : "127.0.0.1",
+	"server_port"  : 6526,
+	"log_filename" : "/home/nvidia/software/PMLib/server",
+
+    "computers" : {
+        "Jetson-AGX2" :    { "ip" : "0.0.0.0" }
+   	},
+
+    "devices" : {
+        "Jetson-AGX" : { "type" : "Xavier", "url": "/sys/bus/i2c/drivers/ina3221x/", "max_freq" : 10,
+            "lines" : { 
+                "VDD_SYS_GPU"    : { "number" : 0,  "voltage": 19, "description" : "GPU power rail" },
+                "VDD_SYS_CPU"    : { "number" : 1,  "voltage": 19, "description" : "SOC power rail" },
+                "VDD_SYS_SOC"    : { "number" : 2,  "voltage": 19, "description" : "SoC power rail" },
+                "VDD_CV"         : { "number" : 3,  "voltage": 5,  "description" : "CV power rail" },
+                "VDD_SYS_DDR"    : { "number" : 4,  "voltage": 5,  "description" : "DDR power rail" },
+                "VDD_SYS_5V"     : { "number" : 5,  "voltage": 5,  "description" : "System 5V power rail" }
+                }
+            }
+        }
+    }
+}
