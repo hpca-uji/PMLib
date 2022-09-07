@@ -24,8 +24,8 @@
  * =========================================================================
 */
 
-#ifndef ARDUPOWER_HPP
-#define ARDUPOWER_HPP
+#ifndef JETSONNANO_HPP
+#define JETSONNANO_HPP
 
 #include <fstream>
 #include <string>
