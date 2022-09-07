@@ -24,8 +24,8 @@
  * =========================================================================
 */
 
-#ifndef JETSONNANO_HPP
-#define JETSONNANO_HPP
+#ifndef NANO_HPP
+#define NANO_HPP
 
 #include <fstream>
 #include <string>
