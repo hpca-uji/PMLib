@@ -150,6 +150,5 @@ int pm_print_data_text(char *file_name, counter_t pm_counter, line_t lines, int 
   }
   
   fclose(file_data);
-  return(1);
-
+  return(0);
 }
