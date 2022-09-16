@@ -8,7 +8,7 @@
    	},
 
     "devices" : {
-        "Jetson-Xavier" : { "type" : "Jetson", "url": "/sys/bus/i2c/drivers/ina3221x/", "max_freq" : 10,
+        "Jetson-Xavier" : { "type" : "Xavier", "url": "/sys/bus/i2c/drivers/ina3221x/", "max_freq" : 10,
             "lines" : { 
                 "GPU"    : { "number" : 0,  "description" : "GPU power rail" },
                 "CPU"    : { "number" : 1,  "description" : "CPU power rail" },
