@@ -174,5 +174,5 @@ int pm_get_counter_data( counter_t *pm_counter ){
 
   free(string);
 
-  return(1);
+  return(0);
 }
