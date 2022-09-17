@@ -120,7 +120,7 @@ void Info::read_device() {
     try {    
         while ( true ) {
             send(_sock, dev->get_sample() );
-            this_thread::sleep_for(chrono::microseconds((int)sleep_time));
+            this_thread::sleep_for(std::chrono::microseconds((int)sleep_time));
         }
     } 
     catch(exception& e) {}

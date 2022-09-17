@@ -95,7 +95,7 @@ namespace PMLib
                     sample[3] += 0.03;
 
                     yield( sample );
-                    this_thread::sleep_for(chrono::microseconds((int)(1e6/max_freq)));
+                    this_thread::sleep_for(std::chrono::microseconds((int)(1e6/max_freq)));
                 }    
         } ) {};   
     };

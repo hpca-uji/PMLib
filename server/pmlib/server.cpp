@@ -136,7 +136,7 @@ void Server::start_devices() {
             d.second->start();
 
             unique_lock<mutex> lk(d.second->start_mutex);
-            d.second->start_cv.wait_for(lk, chrono::seconds(15) );
+            d.second->start_cv.wait_for(lk, std::chrono::seconds(15) );
 
             if ( d.second->is_working() )
                 cout << green << "[  OK  ]" << def << endl << flush;
@@ -162,7 +162,7 @@ void Server::stop_devices() {
                 d.second->stop();
 
                 unique_lock<mutex> lk(d.second->stop_mutex);
-                d.second->stop_cv.wait_for(lk, chrono::seconds(15) );
+                d.second->stop_cv.wait_for(lk, std::chrono::seconds(15) );
 
                 if ( !d.second->is_running() )
                     cout << green << "[  OK  ]" << def << endl << flush;

@@ -29,6 +29,7 @@
 
 #include "Nano.hpp"
 #include "Xavier.hpp"
+#include "Orin.hpp"
 #include "LMG.hpp"
 #include "ArduPower.hpp" 
 #include "WattsUp.hpp"

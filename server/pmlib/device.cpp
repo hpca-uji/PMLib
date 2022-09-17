@@ -173,7 +173,7 @@ void Device::run() {
                         
             }
             // This is important as it avoids a full busy-wait loop!
-            this_thread::sleep_for(chrono::microseconds((int)(1e6/_max_frequency)));
+            this_thread::sleep_for(std::chrono::microseconds((int)(1e6/_max_frequency)));
         }        
 
     } );
@@ -200,7 +200,7 @@ void Device::run() {
             }
         }
         // This is important as it avoids a full busy-wait loop!
-        this_thread::sleep_for(chrono::microseconds((int)(1e6/_max_frequency)));
+        this_thread::sleep_for(std::chrono::microseconds((int)(1e6/_max_frequency)));
     }
 
 //    avg_thr.join();
