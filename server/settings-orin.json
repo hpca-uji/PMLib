@@ -1,0 +1,20 @@
+{
+	"server_ip"    : "127.0.0.1",
+	"server_port"  : 6526,
+	"log_filename" : "/home/dolzm/software/PMLib/server",
+
+    "computers" : {
+        "Jetson-Orin" :    { "ip" : "0.0.0.0" }
+   	},
+
+    "devices" : {
+        "Jetson-Orin" : { "type" : "Orin", "url": "/sys/bus/i2c/drivers/ina3221/", "max_freq" : 10,
+            "lines" : { 
+                "VDD_GPU_SOC"     : { "number" : 0, "description" : "GPU and SOC Combined power rail" },
+                "VDD_CPU_CV"      : { "number" : 1, "description" : "CPU and CV Combined power rail" },
+                "VIN_SYS_5V0"     : { "number" : 2, "description" : "System 5V power rail" },
+                "VDDQ_VDD2_1V8AO" : { "number" : 3, "description" : "DDR and 1V8AO combined power rail" }
+            }
+        }
+    }
+}
