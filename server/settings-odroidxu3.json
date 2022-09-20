@@ -1,0 +1,20 @@
+{
+	"server_ip"    : "127.0.0.1",
+	"server_port"  : 6526,
+	"log_filename" : "/home/dolzm/software/PMLib/server",
+
+    "computers" : {
+        "Odroid-XU3" :    { "ip" : "0.0.0.0" }
+   	},
+
+    "devices" : {
+        "Odroid-XU3" : { "type" : "OdroidXU3", "url": "", "max_freq" : 10,
+            "lines" : { 
+                "ARMU_A15" : { "number" : 0, "description" : "ARM A15 CPU power rail" },
+                "KFCU_A7"  : { "number" : 1, "description" : "ARM A7 CPU power rail" },
+                "G3DU_GPU" : { "number" : 2, "description" : "GPU power rail" },
+                "MEMU_MEM" : { "number" : 3, "description" : "MEM power rail" }
+            }
+        }
+    }
+}
