@@ -27,6 +27,7 @@
 #ifndef DEVICES_LIST_HPP
 #define DEVICES_LIST_HPP
 
+#include "TX2.hpp"
 #include "Nano.hpp"
 #include "Xavier.hpp"
 #include "Orin.hpp"

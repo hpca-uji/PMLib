@@ -30,6 +30,8 @@
 #include <fstream>
 #include <string>
 
+using namespace std::chrono;
+
 namespace PMLib
 {
     template <int n_lines = 4, int max_freq = 10, bool pdu = false>
@@ -50,8 +52,9 @@ namespace PMLib
                    files.emplace_back(get_url() + "/1-004" + std::to_string(i) + "/hwmon/hwmon" + std::to_string(i+1) + "/curr" + std::to_string(j+1) + "_input");
 		}
 	    }	
-            while ( is_running() ){ 
-	        sample[0]++;  
+            while ( is_running() ){
+                auto t1 = system_clock::now();
+
 		for( int i=0; i<4; i++ ){
                     getline(files[i*2], line_voltage);
                     getline(files[i*2+1], line_current);
@@ -60,7 +63,11 @@ namespace PMLib
                     files[i*2+1].seekg(0);
 		}
                 yield( sample );
-                this_thread::sleep_for(std::chrono::microseconds((int)(1e6/max_freq)));
+
+                auto t2 = system_clock::now();
+                auto dms = duration_cast<microseconds>(t2 - t1);
+                if( dms.count() < (int)(1e6/max_freq) )
+                  this_thread::sleep_for(microseconds((int)(1e6/max_freq) - dms.count()));
             }
 
         } ) {};   

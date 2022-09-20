@@ -1,0 +1,28 @@
+{
+	"server_ip"    : "127.0.0.1",
+	"server_port"  : 6526,
+	"log_filename" : "/home/nvidia/software/PMLib/server",
+
+    "computers" : {
+        "Jetson-TX2" :    { "ip" : "0.0.0.0" }
+   	},
+
+    "devices" : {
+        "Jetson-TX2" : { "type" : "TX2", "url": "/sys/devices/3160000.i2c/i2c-0/", "max_freq" : 10,
+            "lines" : {
+                "VDD_SYS_GPU"    : { "number" :  0,  "description" : "Tegra GPU & SRAM, GPU supply input" },
+                "VDD_SYS_SOC"    : { "number" :  1,  "description" : "VDD_SYS_SOC_IN, SOC supply input. Powers the display adapter, ISP, NVDEC, NVENC, VIC" },
+                "VDD_4V0_WIFI"   : { "number" :  2,  "description" : "WIFI power rail" },
+                "VDD_IN"         : { "number" :  3,  "description" : "VDD_IN Supply Monitor. It powers all other rails (VDD_SYS_CPU, VDD_SYS_DDR, VDD_SYS_GPU, VDD_SYS_SOC, VDD_4V0_WIFI)" },
+                "VDD_SYS_CPU"    : { "number" :  4,  "description" : "VDD_SYS_CPU_IN (CPU supply input)" },
+                "VDD_SYS_DDR"    : { "number" :  5,  "description" : "VDD_5V0_SD0 (DDR supply input)" },
+                "VDD_MUX"        : { "number" :  6,  "description" : "DC Jack to Carrier Board. Powers the VDD_5V0_IO_SYS and VDD_3V3_SYS rails. Does NOT power the VDD_IN rail in the TX2 module." },
+                "VDD_5V0_IO_SYS" : { "number" :  7,  "description" : "5V SYSTEM. Powers the VDD_1V8 rail" },
+                "VDD_3V3_SYS"    : { "number" :  8,  "description" : "3V3 SYSTEM. Powers the VDD_3V3_IO_SLP (VDD_3V3_SLP) rail." },
+                "VDD_3V3_IO_SLP" : { "number" :  9,  "description" : "3V3 RUN RAIL. VDD_3V3_SLP on the carrier board schematic. Powers the 3.3V input of the SATA connector, display connector (pin 16), camera expansion (pins 84, 108, 110),2.8 V for the camera." },
+                "VDD_1V8_IO"     : { "number" : 10,  "description" : "1.8V SYSTEM. VDD_1V8 on the carrier board schematic" },
+                "VDD_3V3_SYS_M2" : { "number" : 11,  "description" : "M.2 3.3V. Powers the M.2 connector." }
+            }
+        }
+    }
+}

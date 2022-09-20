@@ -410,15 +410,9 @@ namespace PMLib
                 yield( sample );
 
                 auto t2 = system_clock::now();
-
                 auto dms = duration_cast<microseconds>(t2 - t1);
-                //std::cout << "Measurement took " << dms.count() << " microseconds" << std::endl;
-
 		if( dms.count() < (int)(1e6/max_freq) )
-                {
-                  //std::cout << "Will sleep: " << (int)(1e6/max_freq) - dms.count() << " microseconds" << std::endl;
                   this_thread::sleep_for(chrono::microseconds((int)(1e6/max_freq) - dms.count()));
-                }
             }
 
             getNode.CloseINA231();
