@@ -412,7 +412,7 @@ namespace PMLib
                 auto t2 = system_clock::now();
                 auto dms = duration_cast<microseconds>(t2 - t1);
 		if( dms.count() < (int)(1e6/max_freq) )
-                  this_thread::sleep_for(chrono::microseconds((int)(1e6/max_freq) - dms.count()));
+                  this_thread::sleep_for(std::chrono::microseconds((int)(1e6/max_freq) - dms.count()));
             }
 
             getNode.CloseINA231();
