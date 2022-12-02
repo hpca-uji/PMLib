@@ -44,7 +44,7 @@ namespace PMLib
             std::string line;
             std::vector<ifstream> files;
 	    for(int i=0; i<3; i++){
-               files.emplace_back(get_url() + "/6-0040/iio_device/in_power" + std::to_string(i) + "_input");
+               files.emplace_back(get_url() + "/6-0040/iio:device0/in_power" + std::to_string(i) + "_input");
 	    }	
             while ( is_running() ){ 
                 auto t1 = system_clock::now();
