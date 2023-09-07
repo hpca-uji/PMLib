@@ -1,0 +1,20 @@
+{
+	"server_ip"    : "127.0.0.1",
+	"server_port"  : 6526,
+	"log_filename" : "/home/dolzm/software/PMLib/server",
+
+    "computers" : {
+        "Jetson-AGX2" :    { "ip" : "0.0.0.0" }
+   	},
+
+    "devices" : {
+        "Jetson-Orin-Nano" : { "type" : "OrinNano", "url": "/sys/bus/i2c/drivers/ina3221", "max_freq" : 10,
+            "lines" : { 
+                "VDD_IN"     : { "number" : 0, "description" : "Total Module Power" },
+                "VDD_CPU_GPU_CV"      : { "number" : 1, "description" : " Total power consumed by CPU, CPU and CV cores i.e. DLA and PVA" },
+                "VDD_SOC"     : { "number" : 2, "description" : "Power consumed by SOC core which supplies to memory subsystem and various engines like nvdec, nvenc, vi, vic, isp etc." },
+                "Total" : { "number" : 3, "description" : "Total" }
+            }
+        }
+    }
+}
