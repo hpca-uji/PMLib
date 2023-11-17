@@ -1,21 +1,19 @@
-#!/usr/bin/env python3
-
 import time
 
 import pmlib
 # Configuration
 SERVER_IP = "127.0.0.1"
 SERVER_PORT = 6526
-DEVICE_NAME = "Jetson-Orin-Nano"
+DEVICE_NAME = "Jetson-Nano"
 SECONDS_TO_SLEEP = 2
 
 print("Set server and lines...")
 pmlib = pmlib.PMLib(SERVER_IP, SERVER_PORT)
 #
-print(f"{pmlib.server.server_ip=}")
-print(f"{pmlib.server.port=}")
+print(f"pmlib.server.server_ip= {pmlib.server.server_ip}")
+print(f"pmlib.server.port= {pmlib.server.port}")
 #
-print(f"{pmlib.lines.__bits=} ({int.from_bytes(pmlib.lines.__bits, byteorder='little'):032b})")
+print(f"pmlib.lines.__bits= {pmlib.lines.__bits} ({int.from_bytes(pmlib.lines.__bits, byteorder='little'):032b})")
 print()
 
 print("Creating counter...")
@@ -37,17 +35,17 @@ print()
 print("Getting data...")
 pmlib.get_counter_data()
 
-print(f"{pmlib.counter.measures.contents.next_timing=}")
-print(f"{pmlib.counter.measures.contents.timing=}")
-print(f"{pmlib.counter.measures.contents.energy.watts_size=}")
-print(f"{pmlib.counter.measures.contents.energy.watts_sets_size=}")
-print(f"{pmlib.counter.measures.contents.energy.watts_sets=}")
-print(f"{pmlib.counter.measures.contents.energy.watts=}")
-print(f"{pmlib.counter.measures.contents.energy.lines_len=}")
+print(f"{pmlib.counter.measures.contents.next_timing}")
+print(f"{pmlib.counter.measures.contents.timing}")
+print(f"{pmlib.counter.measures.contents.energy.watts_size}")
+print(f"{pmlib.counter.measures.contents.energy.watts_sets_size}")
+print(f"{pmlib.counter.measures.contents.energy.watts_sets}")
+print(f"{pmlib.counter.measures.contents.energy.watts}")
+print(f"{pmlib.counter.measures.contents.energy.lines_len}")
 print()
-print(f"{pmlib.times=}")
-print(f"{pmlib.watts=}")
-print(f"{pmlib.counter.measures.contents.energy.lines_len=}")
+print(f"{pmlib.times}")
+print(f"{pmlib.watts}")
+print(f"{pmlib.counter.measures.contents.energy.lines_len}")
 print()
 
 print("Storing output on 'pmlib_example_output.txt'")
