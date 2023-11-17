@@ -228,8 +228,8 @@ class PMLib:
         next_sample_from_start = self._next_sample_from_start(start_time)
         previous_sample_from_end = self._previous_sample_from_end(end_time)
         if debug:
-            print(f">> {next_sample_from_start=}")
-            print(f">> {previous_sample_from_end=}")
+            print(f">> next_sample_from_start=  {next_sample_from_start}")
+            print(f">> previous_sample_from_end= {previous_sample_from_end}")
         # Interpolate watts for start and end time
         watts_on_start_time, watts_on_end_time = [], []
         for watts in self.watts:
@@ -240,8 +240,8 @@ class PMLib:
         watts_on_start_time = np.array(watts_on_start_time)
         watts_on_end_time = np.array(watts_on_end_time)
         if debug:
-            print(f">> {watts_on_start_time[0]=} ({self.watts[0, next_sample_from_start]=})")
-            print(f">> {watts_on_end_time[0]=} ({self.watts[0, previous_sample_from_end]=})")
+            print(f">> watts_on_start_time=  {watts_on_start_time[0]} ({self.watts[0, next_sample_from_start]})")
+            print(f">> watts_on_end_time= {watts_on_end_time[0]} ({self.watts[0, previous_sample_from_end]})")
         # Integrate the energy
         if next_sample_from_start > previous_sample_from_end:
             # Integrate the energy between the two interpolated samples
