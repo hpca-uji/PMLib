@@ -43,7 +43,7 @@ make
 ### 7. Navigate to client folder and make
 
 ```bash
-cd /pmlib/client
+cd pmlib/client
 make
 ```
 
@@ -77,14 +77,14 @@ make
 ### 1. Set the server up in a terminal with the settings file of your device
 
 ```bash
-cd /pmlib/server/pmlib
+cd pmlib/server/build
 sudo ./pmlib_server --configfile ../settings-nano.json
 ```
 
 ### 2. In another terminal navigate to the client and test the library
 
 ```bash
-cd /pmlib/client
+cd pmlib/client
 ./pm_info -s 127.0.0.1:6526 -l -r Jetson-Nano
 ```
 
