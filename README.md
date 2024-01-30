@@ -77,7 +77,7 @@ make
 ### 1. Set the server up in a terminal with the settings file of your device
 
 ```bash
-cd pmlib/server/build
+cd pmlib/server/pmlib
 sudo ./pmlib_server --configfile ../settings-nano.json
 ```
 
