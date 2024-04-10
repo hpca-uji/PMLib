@@ -31,6 +31,7 @@
 #include "Nano.hpp"
 #include "Xavier.hpp"
 #include "Orin.hpp"
+#include "OrinNano.hpp"
 #include "OdroidXU3.hpp"
 #include "LMG.hpp"
 #include "ArduPower.hpp" 
