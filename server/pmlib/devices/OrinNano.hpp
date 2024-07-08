@@ -49,10 +49,10 @@ namespace PMLib
 		   // Skip non-connected lines. See:
 		  // https://docs.nvidia.com/jetson/archives/r35.3.1/DeveloperGuide/text/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#thermal-management-in-bpmp
 		  // if ( i == 1 && ( j == 0 || j == 2 ) ) continue; 
-                   files.emplace_back(get_url() + "/1-004" + std::to_string(i) + "/hwmon/hwmon0" +  "/in" + std::to_string(tabla[j]) + "_input");
-                   files.emplace_back(get_url() + "/1-004" + std::to_string(i) + "/hwmon/hwmon0" +  "/curr" + std::to_string(tabla[j]) + "_input");
-                   namefiles.emplace_back(get_url() + "/1-004" + std::to_string(i) + "/hwmon/hwmon0" +  "/in" + std::to_string(tabla[j]) + "_input");
-                   namefiles.emplace_back(get_url() + "/1-004" + std::to_string(i) + "/hwmon/hwmon0" +  "/curr" + std::to_string(tabla[j]) + "_input");
+                   files.emplace_back(get_url() + "/1-004" + std::to_string(i) + "/hwmon/hwmon3" +  "/in" + std::to_string(tabla[j]) + "_input");
+                   files.emplace_back(get_url() + "/1-004" + std::to_string(i) + "/hwmon/hwmon3" +  "/curr" + std::to_string(tabla[j]) + "_input");
+                   namefiles.emplace_back(get_url() + "/1-004" + std::to_string(i) + "/hwmon/hwmon3" +  "/in" + std::to_string(tabla[j]) + "_input");
+                   namefiles.emplace_back(get_url() + "/1-004" + std::to_string(i) + "/hwmon/hwmon3" +  "/curr" + std::to_string(tabla[j]) + "_input");
 		}
 	    }	
             while ( is_running() ){

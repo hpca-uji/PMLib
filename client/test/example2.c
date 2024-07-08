@@ -9,8 +9,8 @@ int main (int argc, char *argv[])
         int i, frequency= 0, aggregate= 1;
 
 	pm_set_server("127.0.0.1", 6526, &server);
-	pm_set_lines("0-31", &lines);
-	pm_create_counter("Jetson-Nano", lines, !aggregate, frequency, server, &counter);
+	pm_set_lines("0-2", &lines);
+	pm_create_counter("Jetson-Orin-Nano", lines, !aggregate, frequency, server, &counter);
 
 	pm_start_counter(&counter);
         sleep(10);

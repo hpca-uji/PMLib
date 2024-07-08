@@ -6,8 +6,8 @@ if __name__ == "__main__":
     aggregate= 0;
     
     server = libpmlib.pm_create_server("127.0.0.1", 6526)
-    lines = libpmlib.pm_create_lines("0-31")
-    counter = libpmlib.pm_create_counter("Jetson-Nano", lines, aggregate, frequency, server)
+    lines = libpmlib.pm_create_lines("0-2")
+    counter = libpmlib.pm_create_counter("Jetson-Orin-Nano", lines, aggregate, frequency, server)
     
     libpmlib.pm_start_counter(counter)
     time.sleep(10)

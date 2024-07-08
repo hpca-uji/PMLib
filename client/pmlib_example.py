@@ -2,13 +2,14 @@ import time
 
 import pmlib
 # Configuration
-SERVER_IP = "127.0.0.1"
+SERVER_IP = str("127.0.0.1")
 SERVER_PORT = 6526
-DEVICE_NAME = "Jetson-Nano"
+DEVICE_NAME = "Jetson-Orin-Nano"
 SECONDS_TO_SLEEP = 2
 
 print("Set server and lines...")
 pmlib = pmlib.PMLib(SERVER_IP, SERVER_PORT)
+pmlib.create_lines("0-2")
 #
 print(f"pmlib.server.server_ip= {pmlib.server.server_ip}")
 print(f"pmlib.server.port= {pmlib.server.port}")
