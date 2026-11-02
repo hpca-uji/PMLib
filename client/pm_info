@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import socket, struct
@@ -12,17 +12,27 @@ def handler(signum, frame):
         send_all_data(client, struct.pack("i", 0) )
         client.close()
 
-def receive_data(client, datatype):
+def receive_exact(client, size):
+    # recv() may return fewer bytes than requested; keep reading until the
+    # whole field has arrived, or give up if the server closed the socket.
+    msg= b""
     try:
-        msg= client.recv(struct.calcsize(datatype))
-        if len(msg) == 0: 
-           client.close()
-           sys.exit(1)
-    except:
-       client.close()
-       sys.exit(1)
-    
-    return struct.unpack(datatype, msg)[0]
+        while len(msg) < size:
+            chunk= client.recv(size - len(msg))
+            if len(chunk) == 0:
+                client.close()
+                sys.exit(1)
+            msg+= chunk
+    except OSError:
+        client.close()
+        sys.exit(1)
+    return msg
+
+def receive_data(client, datatype):
+    return struct.unpack(datatype, receive_exact(client, struct.calcsize(datatype)))[0]
+
+def receive_string(client):
+    return receive_exact(client, receive_data(client, "i")).decode(errors="replace")
 
 def send_all_data(client, msg):
     totalsent = 0
@@ -38,54 +48,52 @@ def show(client, lines= False, counters= False):
 
     n_dev= receive_data(client, "i")
 
-    for dev in xrange(n_dev):
-        dev_name=  client.recv( receive_data(client, "i") )
+    for dev in range(n_dev):
+        dev_name=  receive_string(client)
         dev_freq=  receive_data(client, "i")
         dev_lines= receive_data(client, "i")
        
-        print "Dev: %s - Freq: %d Hz - Lines: %d" % (dev_name, dev_freq, dev_lines)
+        print("Dev: %s - Freq: %d Hz - Lines: %d" % (dev_name, dev_freq, dev_lines))
  
         is_pdu= bool(receive_data(client, "i"))
         if not is_pdu:
-            comp_name= client.recv( receive_data(client, "i") )
-            print " - Computer: %s" % (comp_name)
+            comp_name= receive_string(client)
+            print(" - Computer: %s" % (comp_name))
 
         if lines:
-            print "  * Lines:"
-        for lin in xrange(dev_lines):
+            print("  * Lines:")
+        for lin in range(dev_lines):
             lin_number = receive_data(client, "i")
-            lin_name   = client.recv( receive_data(client, "i") )
+            lin_name   = receive_string(client)
             lin_voltage= receive_data(client, "f")
-            lin_desc   = client.recv( receive_data(client, "i") )
+            lin_desc   = receive_string(client)
 
             if lines:
-                print "    - Line: %2d - Name: %3s - Voltage: %.2f V - Desc: %s" % (lin_number, lin_name, lin_voltage, lin_desc), 
+                print("    - Line: %2d - Name: %3s - Voltage: %.2f V - Desc: %s" % (lin_number, lin_name, lin_voltage, lin_desc), end="")
 
             if is_pdu:
-                comp_name=   client.recv( receive_data(client, "i") )
+                comp_name=   receive_string(client)
                 if lines:
-                    print " - Computer: %s" % (comp_name)
+                    print(" - Computer: %s" % (comp_name))
             else:
                 if lines:
-                    print
-
+                    print()
         dev_counters= receive_data(client, "i")
         if dev_counters and counters:
-            print "  * Counters:"
-            for con in xrange(dev_counters):
+            print("  * Counters:")
+            for con in range(dev_counters):
                 counter_id   = receive_data(client, "i")
-                counter_add  = client.recv( receive_data(client, "i") )
+                counter_add  = receive_string(client)
                 counter_lines= receive_data(client, "i")
                 counter_lines_array= []
 
-                for lin in xrange(counter_lines):
+                for lin in range(counter_lines):
                     counter_lines_array.append( str(receive_data(client, "i")) )
 
                 if counters:
-                    print "    - Counter: %2d - Address: %s - Selected lines: %s" % (counter_id, counter_add, ":".join(counter_lines_array))
+                    print("    - Counter: %2d - Address: %s - Selected lines: %s" % (counter_id, counter_add, ":".join(counter_lines_array)))
 
-        print
-
+        print()
     client.close()
 
 def readdevice(client, dev_name, frequency):
@@ -93,18 +101,18 @@ def readdevice(client, dev_name, frequency):
     send_all_data(client, struct.pack("i", 9) )
 
     msg=  struct.pack("i", len(dev_name))
-    msg+= dev_name
+    msg+= dev_name.encode()
     msg+= struct.pack("i", frequency)
     send_all_data(client, msg )
 
     status= receive_data(client, "i")
 
     if status == -1:
-        print "Device %s does not exist!" % (dev_name)
+        print("Device %s does not exist!" % (dev_name))
 
     elif status == -2:
         frequency= receive_data(client, "i")
-        print "Device %s only works at least %d Hz!" % (dev_name, frequency)
+        print("Device %s only works at least %d Hz!" % (dev_name, frequency))
  
     elif status == 0:
         while True:
@@ -113,13 +121,13 @@ def readdevice(client, dev_name, frequency):
 
             sum_= 0
             sample= ""
-            for lin in xrange(lines):
+            for lin in range(lines):
                 line_power= receive_data(client, "d")
                 sum_+= line_power
                 sample+= "%5.2f : " % (line_power)
                 lines_array.append( "%.2f" % (line_power) )
 
-            print "%s - %s =  %2.2f" % (time.strftime("%H:%M:%S", time.localtime()), sample[:-2], sum_)
+            print("%s - %s =  %2.2f" % (time.strftime("%H:%M:%S", time.localtime()), sample[:-2], sum_))
            # send_all_data(client, struct.pack("i", 1) )
 
 if __name__ == "__main__":
@@ -138,7 +146,7 @@ if __name__ == "__main__":
     (options, args) = parser.parse_args()
 
     if not options.server or len(options.server.split(":")) != 2:
-        print "You must specify a pm_server SERVER:PORT!"
+        print("You must specify a pm_server SERVER:PORT!")
         parser.print_help()
         sys.exit(-1)
 
