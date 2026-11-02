@@ -193,7 +193,10 @@ class PMLib:
             (ctypes.c_double * 2).from_address(ctypes.addressof(self.counter.measures.contents.timing.contents)))
         self.len_lines = 1 if self.counter.aggregate == 1 else self.counter.measures.contents.energy.lines_len
         self.len_samples = self.counter.measures.contents.energy.watts_size // self.len_lines
-        self.period = (self.counter_end_time - self.counter_start_time) / (self.len_samples - 1)
+        # A region shorter than one sampling period yields a single sample,
+        # which has no period (get_joules() rejects that case explicitly).
+        self.period = ((self.counter_end_time - self.counter_start_time) / (self.len_samples - 1)
+                       if self.len_samples > 1 else 0.0)
         self.times = np.array([self.counter_start_time + x * self.period for x in range(self.len_samples)])
         self.watts = np.ctypeslib \
             .as_array((ctypes.c_double * self.len_samples * self.len_lines).from_address(
@@ -217,6 +220,9 @@ class PMLib:
         return max(0, previous_sample_from_end + 1 - next_sample_from_start)
 
     def get_joules(self, start_time, end_time, debug=False):
+        if self.len_samples < 2:
+            raise ValueError("At least two samples are needed to integrate energy; "
+                             "measure for longer than two sampling periods")
         # Check boundaries
         if start_time >= end_time:
             raise ValueError("End time must be greater than start time")
