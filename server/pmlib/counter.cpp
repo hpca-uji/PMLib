@@ -45,6 +45,10 @@
 #include "counter.hpp"
 #include "utils/logger.hpp"
 
+/// @file counter.cpp
+/// @brief Counter implementation. See counter.hpp for the class-level
+///        documentation.
+
 namespace PMLib {
 
 int Counter::nextid = 0;
@@ -157,25 +161,32 @@ void Counter::stop() {
 
 void Counter::get() {
     if ( status == State::INACTIVE ) {
-        
+
         vector<int> watts_sets(1, 0);
         vector<long long int> min_len(sets.size(), 0);
         vector<double> watts;
         int se_idx = 0;
-        
+
+        // For each recorded set, the usable output length is the shortest
+        // resampled line (lines can have accumulated slightly different
+        // buffer offsets by the time stop() ran), so every line contributes
+        // the same number of samples to the reply.
         for ( auto &se : sets ) {
             for ( auto &l : lines ) {
-                min_len[ se_idx ] = ( l == lines.front() ) ? 
+                min_len[ se_idx ] = ( l == lines.front() ) ?
                                     ceil( ( se.second.get()[l] - se.first[l] ) / interval) :
                                     min( (long long)ceil( ( ( se.second.get()[l] - se.first[l] ) / interval ) ), min_len[ se_idx ] );
             }
-        
+
             watts_sets.push_back( min_len[se_idx] + watts_sets.back() );
             se_idx++;
         }
        // cout << "MIN_LEN: [ "; for(auto &i:min_len) cout << i << " "; cout << "]" << endl;
        // cout << "WATTS_SETS: [ "; for(auto &i:watts_sets) cout << i << " "; cout << "]" << endl;
 
+        // Aggregate mode sums all requested lines into one series per set
+        // (e.g. total power across several outlets); non-aggregate mode
+        // keeps each line's samples separate, interleaved set by set.
         if ( aggregate ) {
             se_idx = 0;
             for ( auto &se : sets ) {
@@ -204,12 +215,11 @@ void Counter::get() {
                   //  cout << "    RANGE: [ " << se.first[l] << ", " << 
                   //  min( min(se.second.get()[l], se.first[l]+min_len[se_idx]), (long long) line.size()) << " ] "<<endl;
 
-                    int before= watts.size();
                     int i = 0;
                     copy_if( line.begin() + se.first[l],
                              line.begin() + min( min(se.second.get()[l], se.first[l]+min_len[se_idx]), (long long) line.size()),
-                             back_inserter(watts), 
-                             [&i, this](int value){ return (i++ % interval) == 0; } );
+                             back_inserter(watts),
+                             [&i, this](int){ return (i++ % interval) == 0; } );
                   //  cout << "  WATTS DATA: "; cout << watts.size()-before << endl; for ( auto &d:watts) cout << d << " "; cout << endl;
                 }
              //   cout << endl;
@@ -251,9 +261,8 @@ void Counter::set_lines(string lines_str) {
         for ( int b = 0; b < 8; b++ ) { 
             int l = i*8 + b;
             if ( lines_str[i] & (1 << b) && 
-                 l >= 0 && l < dev->get_num_lines() ) {
+                 l >= 0 && l < dev->get_num_lines() ) 
                 lines.push_back( l );
-	    }
         }
     }
 }

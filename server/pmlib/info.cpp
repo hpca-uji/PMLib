@@ -34,6 +34,10 @@
 #include "info.hpp"
 #include "utils/logger.hpp"
 
+/// @file info.cpp
+/// @brief Info implementation. See info.hpp for the class-level
+///        documentation.
+
 namespace PMLib {
 
 Info::Info(socket_ptr sock, Operation op, Server* server) :
@@ -42,6 +46,10 @@ Info::Info(socket_ptr sock, Operation op, Server* server) :
 }
 
 void Info::list_devices() {
+    // The client (see client/pm_get_devices.c's documented protocol) reads
+    // the device count before looping to read each name; omitting it here
+    // left every client call desynchronized from the very first reply.
+    send<int>(_sock, (int)_server->device_map.size());
     for (auto &dev : _server->device_map)
         send(_sock, dev.second->get_name());
 }
@@ -117,12 +125,14 @@ void Info::read_device() {
     send<int>(_sock, (int)Retval::SUCCESS);
     float sleep_time = 1e6 / ((frequency > 0) ? frequency : max_frequency);
 
-    try {    
+    // Streams indefinitely; relies on send() throwing once the client
+    // disconnects (broken pipe) to fall through and let run() return.
+    try {
         while ( true ) {
             send(_sock, dev->get_sample() );
             this_thread::sleep_for(std::chrono::microseconds((int)sleep_time));
         }
-    } 
+    }
     catch(exception& e) {}
 }
 

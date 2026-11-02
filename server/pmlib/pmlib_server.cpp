@@ -30,6 +30,10 @@
 #include <getopt.h>
 #include "server.hpp"
 
+/// @file pmlib_server.cpp
+/// @brief Entry point: parses --configfile/--daemonize and runs a
+///        PMLib::Server for the lifetime of the process.
+
 void printUsage(const std::string & progName){
     std::cerr << std::endl;
     std::cerr << "Usage: " << progName << " [--verbose] [--configfile]" << std::endl;
@@ -39,12 +43,11 @@ void printUsage(const std::string & progName){
 
 int main(int argc, char *argv[]) {
 
-    int all = 0;
     int daemonize = false; //verbose;
     string configfile = "";
 
     static struct option long_options[] = {
-        {"daemonize",     no_argument,       0,            'd'},
+        {"daemonize",    no_argument,       0,            'd'},
         {"configfile",   required_argument, 0,            'c'},
         {0,              0,                 0,              0}
     };

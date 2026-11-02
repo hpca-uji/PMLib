@@ -31,9 +31,13 @@
 #include <boost/thread.hpp>
 
 #include "device.hpp"
-#include "server.hpp" 
+#include "server.hpp"
 #include "counter.hpp"
 #include "utils/logger.hpp"
+
+/// @file device.cpp
+/// @brief Device implementation. See device.hpp for the class-level
+///        documentation.
 
 namespace PMLib {
 
@@ -80,7 +84,7 @@ void Device::deregister_counter(const Counter &c) {
 void Device::register_line(string name, string description, string metric, int number, Computer &c, float voltage,
     float offset, float slope) {
     // Map string metrics to enum.
-    std:map<std::string, Metric> avail_metrics 
+    std::map<std::string, Metric> avail_metrics
     {
       { "voltage" , Metric::voltage },
       { "shunt_voltage" , Metric::shunt_voltage },
@@ -90,13 +94,15 @@ void Device::register_line(string name, string description, string metric, int n
       { "default" , Metric::def }
     };
 
-    Metric _metric;
+    // Falls back to the default metric on an unrecognized config string
+    // instead of leaving it uninitialized.
+    Metric _metric = Metric::def;
 
     try
     {
       _metric = avail_metrics.at( metric );
     }
-    catch( out_of_range )
+    catch( const out_of_range& )
     {
       std::cout << "Unavailable metric" << std::endl;
     }
@@ -149,7 +155,11 @@ void Device::stop() {
 }
 
 void Device::run() {
-    
+
+    // Refuses to start a device whose config didn't declare all of its
+    // lines: Server::start_devices() is waiting on start_cv and treats a
+    // timeout/no-notify as a startup failure, so this notifies immediately
+    // to fail fast instead of hanging for the full 15s wait.
     if (lines.size() < _n_lines) {
         start_cv.notify_all();
         return;
@@ -173,13 +183,16 @@ void Device::run() {
                         
             }
             // This is important as it avoids a full busy-wait loop!
-            this_thread::sleep_for(std::chrono::microseconds((int)(1e6/_max_frequency)));
+            this_thread::sleep_for(chrono::microseconds((int)(1e6/_max_frequency)));
         }        
 
     } );
 */
+    // Producer: the concrete driver's sampling loop (e.g. WattsUp/LMG's
+    // serial read, or the stub increment used when hardware isn't wired
+    // up), pushing samples into data_queue via yield().
     std::thread read_thr( [&] () {
-        try { 
+        try {
             _readf();
         }
         catch (std::exception& e) {
@@ -188,12 +201,15 @@ void Device::run() {
         }
     } );
 
+    // Consumer: drains data_queue into per-line storage. Only flips
+    // _working (unblocking Server::start_devices()) once the first sample
+    // has actually arrived, confirming the driver is really producing data.
     while ( is_running() ) {
         while( !data_queue.empty() && is_running() ) {
             while( !data_queue.pop( _sample ) );
             push_back_data(_sample);
-//            avg_queue.push( _sample ); 
-           // for ( auto &v: sample_) cout << v << " "; cout << endl;        
+//            avg_queue.push( _sample );
+           // for ( auto &v: sample_) cout << v << " "; cout << endl;
             if ( !is_working() ) {
                 _working.store(true);
                 start_cv.notify_all();
