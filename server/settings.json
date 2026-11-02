@@ -1,7 +1,7 @@
 {
 	"server_ip"    : "127.0.0.1",
 	"server_port"  : 6526,
-	"log_filename" : "/home/nvidia/software/PMLib/server",
+	"server_logfile" : "pmlib_%N.log",
 
     "computers" : {
         "Jetson-AGX2" :    { "ip" : "0.0.0.0" }
@@ -20,4 +20,3 @@
             }
         }
     }
-}
