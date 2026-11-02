@@ -86,6 +86,13 @@ int pm_get_devices(server_t pm_server, char ** devices_list [], int *num_devices
         	exit(1);
    	}
 	memcpy((void *)&disp_size, (void *)buffer, sizeof(disp_size));
+	/* A server that doesn't send the device count first (pmlib_server
+	   before the LIST_DEVICES fix) makes this read part of a name; reject
+	   it instead of overflowing buffer. */
+	if (disp_size < 0 || disp_size >= BUFFSIZE) {
+		fprintf(stderr, "Invalid device name length %d from server in get devices\n", disp_size);
+		exit(1);
+	}
   	if ((bytes = recv(sock, ptr_buffer, (disp_size)*sizeof(char), 0)) != (disp_size)*sizeof(char) ) {
         	perror("Failed to receive bytes form server in get devices");
         	exit(1);
