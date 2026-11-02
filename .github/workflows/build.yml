@@ -1,0 +1,55 @@
+name: Build and test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: default
+            cmake_args: ""
+          - name: apcape
+            cmake_args: "-DUSE_DEVICE_APCAPE=ON"
+    name: build (${{ matrix.name }})
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libboost-dev \
+            libboost-system-dev \
+            libboost-filesystem-dev \
+            libboost-thread-dev \
+            libboost-coroutine-dev \
+            libboost-log-dev \
+            libboost-context-dev \
+            libboost-chrono-dev \
+            libboost-date-time-dev \
+            libboost-atomic-dev \
+            libboost-regex-dev \
+            libi2c-dev
+          python -m pip install numpy
+
+      - name: Build server
+        run: |
+          cmake -S server -B build ${{ matrix.cmake_args }}
+          cmake --build build -j"$(nproc)"
+
+      - name: Build client
+        run: make -C client
+
+      # Real hardware isn't available in CI; this runs the server with the
+      # Dummy device and exercises the C and Python clients against it.
+      - name: End-to-end smoke test
+        run: tests/run_smoke_tests.sh build/pmlib_server

@@ -1,0 +1,165 @@
+{
+    "server_ip": "127.0.0.1",
+    "server_port": 16526,
+    "server_logfile": "pmlib_test_%N.log",
+    "stxxl_disk_name": "pmlib_test_data.tmp",
+    "stxxl_disk_mb_size": 64,
+    "computers": {
+        "TestHost": {
+            "ip": "127.0.0.1"
+        }
+    },
+    "devices": {
+        "DummyMeter": {
+            "type": "Dummy",
+            "url": "",
+            "max_freq": 1,
+            "lines": {
+                "Outlet 1": {
+                    "number": 0,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 2": {
+                    "number": 1,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 3": {
+                    "number": 2,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 4": {
+                    "number": 3,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 5": {
+                    "number": 4,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 6": {
+                    "number": 5,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 7": {
+                    "number": 6,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 8": {
+                    "number": 7,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 9": {
+                    "number": 8,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 10": {
+                    "number": 9,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 11": {
+                    "number": 10,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 12": {
+                    "number": 11,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 13": {
+                    "number": 12,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 14": {
+                    "number": 13,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 15": {
+                    "number": 14,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 16": {
+                    "number": 15,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 17": {
+                    "number": 16,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 18": {
+                    "number": 17,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 19": {
+                    "number": 18,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 20": {
+                    "number": 19,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 21": {
+                    "number": 20,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 22": {
+                    "number": 21,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 23": {
+                    "number": 22,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                },
+                "Outlet 24": {
+                    "number": 23,
+                    "computer": "TestHost",
+                    "voltage": 220,
+                    "description": ""
+                }
+            }
+        }
+    }
+}
