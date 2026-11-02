@@ -1,1 +1,27 @@
-.idea
+# Build output
+build/
+build-*/
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+
+# Python
+*.pyc
+__pycache__/
+
+# Doxygen output
+docs/html/
+docs/latex/
+
+# Misc
+nohup.out
+*.log
+*.errlog
+*.pid
+data.tmp
+.DS_Store
+
+# Editors
+.idea/
