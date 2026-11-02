@@ -31,7 +31,7 @@
 /// @brief Driver for the NVIDIA Jetson Nano's on-board INA3221 power
 ///        monitor (3 lines; see settings-nano.json for the rail names).
 ///        Reads each rail's instantaneous power (mW) from
-///        <url>/6-0040/iio:device0/in_power{0,1,2}_input and reports watts.
+///        {url}/6-0040/iio:device0/in_power{0,1,2}_input and reports watts.
 ///        The config's "url" is the INA3221 driver directory, e.g.
 ///        /sys/bus/i2c/drivers/ina3221x/.
 

@@ -32,7 +32,7 @@
 ///        power monitors (6 lines; see settings-xavier.json). These expose
 ///        voltage (mV) and current (mA) separately through hwmon, so each
 ///        sample is computed as V*I and reported in watts, from
-///        <url>/1-004{0,1}/hwmon/hwmon{3,4}/{in,curr}{1..3}_input. The hwmon
+///        {url}/1-004{0,1}/hwmon/hwmon{3,4}/{in,curr}{1..3}_input. The hwmon
 ///        indices are hardcoded to how the kernel enumerates them on the
 ///        boards this was written for. The config's "url" is the INA3221
 ///        driver directory, e.g. /sys/bus/i2c/drivers/ina3221/.

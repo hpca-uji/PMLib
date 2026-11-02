@@ -30,7 +30,7 @@
 /// @file OrinNano.hpp
 /// @brief Driver for the NVIDIA Jetson Orin Nano's on-board INA3221 power
 ///        monitor (4 lines; see settings-orin-nano.json). Each sample is
-///        V*I from <url>/1-0040/hwmon/hwmon3/{in,curr}{1..4}_input, in
+///        V*I from {url}/1-0040/hwmon/hwmon3/{in,curr}{1..4}_input, in
 ///        watts; the hwmon index is hardcoded to the kernel's enumeration on
 ///        the boards this was written for. The config's "url" is the INA3221
 ///        driver directory, e.g. /sys/bus/i2c/drivers/ina3221.

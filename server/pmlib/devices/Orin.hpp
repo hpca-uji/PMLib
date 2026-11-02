@@ -32,7 +32,7 @@
 ///        power monitors (4 lines; see settings-orin.json). Channels 1 and
 ///        3 of the second monitor are not connected on this board and are
 ///        skipped. Each sample is V*I from
-///        <url>/1-004{0,1}/hwmon/hwmon{1,2}/{in,curr}N_input, in watts; the
+///        {url}/1-004{0,1}/hwmon/hwmon{1,2}/{in,curr}N_input, in watts; the
 ///        hwmon indices are hardcoded to the kernel's enumeration on the
 ///        boards this was written for. The config's "url" is the INA3221
 ///        driver directory, e.g. /sys/bus/i2c/drivers/ina3221/.

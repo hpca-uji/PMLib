@@ -31,7 +31,7 @@
 /// @brief Driver for the NVIDIA Jetson TX2's four on-board INA3221 power
 ///        monitors (12 lines, 3 rails each; see settings-tx2.json for the
 ///        rail names). Reads instantaneous power (mW) from
-///        <url>/0-004{0..3}/iio:device{0..3}/in_power{0..2}_input and
+///        {url}/0-004{0..3}/iio:device{0..3}/in_power{0..2}_input and
 ///        reports watts. The config's "url" is the I2C bus directory, e.g.
 ///        /sys/devices/3160000.i2c/i2c-0/.
 
