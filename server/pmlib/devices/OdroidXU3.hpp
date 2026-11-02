@@ -27,6 +27,14 @@
 #ifndef ODROIDXU3_HPP
 #define ODROIDXU3_HPP
 
+/// @file OdroidXU3.hpp
+/// @brief Driver for the Hardkernel Odroid-XU3's four on-board INA231
+///        sensors (4 lines: Cortex-A15 cores, Cortex-A7 cores, Mali GPU and
+///        memory; see settings-odroidxu3.json). Reads them through the
+///        board kernel's /dev/sensor_{arm,kfc,g3d,mem} ioctl interface and
+///        reports watts; the config's "url" is not used. Exits the server if
+///        the sensors cannot be opened.
+
 #include <chrono>
 #include <iostream>
 #include <memory>
@@ -97,17 +105,17 @@ public:
     int GetGPUCurFreq(void) {
       std::ifstream fp;
       fp.open(GPUFREQ_NODE);
-    
+
       if(fp.fail()) {
         std::cerr << "GPUFRE_NODE open failed" << endl;
         return -1;
       }
-    
+
       string freq;
       std::getline(fp, freq);
       fp.close();
       gpuFreq = std::stoi(freq);
-    
+
       return 0;
     };
 
@@ -130,34 +138,34 @@ public:
     int GetOneCPUCurFreq(int cpuNum) {
       std::ifstream fp;
       fp.open(cpu_node_list[cpuNum]);
-    
+
       if(fp.fail()) {
         std::cerr << "CPU " << cpuNum << " open failed: " << cpu_node_list[cpuNum] << endl;
         return -1;
       }
-    
+
       string freq;
       std::getline(fp, freq);
       fp.close();
       int freqi = std::stoi(freq)/1000;
-    
+
       return freqi;
     };
 
     int GetOneCPUTemp(int cpuNum) {
       std::ifstream fp;
       fp.open(TEMP_NODE);
-    
+
       if(fp.fail())
         return -1;
-    
+
       char buf[16];
       for (int i=0; i<cpuNum+1; i++)
         fp.read(buf, 16);
       fp.close();
-    
+
       buf[12] = '\0';
-    
+
       return atoi(&buf[9]);
     };
 
@@ -173,26 +181,26 @@ public:
       else {
         cpuTemp[cpuNum] = GetOneCPUTemp(cpuNum);
       }
-    
+
       return 0;
     };
-    
+
     int GetGPUTemp() {
       std::ifstream fp;
       fp.open(TEMP_NODE);
-    
+
       if(fp.fail())
         return -1;
-    
+
       char buf[16];
       for (int i=0; i<5; i++)
         fp.read(buf, 16);
       fp.close();
-    
+
       buf[12] = '\0';
-    
+
       gpuTemp = atoi(&buf[9]);
-    
+
       return 0;
     };
 
@@ -203,11 +211,11 @@ public:
       int user, system, nice, idle;
       FILE *fp;
       int cpu_index = 0;
-    
+
       fp = fopen("/proc/stat", "r");
       if (fp == NULL)
         return -1;
-    
+
       while (fgets(buf, 128, fp)) {
         char temp[4] = "cpu";
         temp[3] = '0' + cpu_index;
@@ -215,21 +223,21 @@ public:
           findCPU = 1;
           sscanf(buf, "%s %d %d %d %d",
                  cpuid, &user, &nice, &system, &idle);
-    
+
           usage[cpu_index] = calUsage(cpu_index, user, nice, system, idle);
-    
+
           cpu_index++;
         }
         if (!strncmp(buf, "intr", 4))
           break;
         if (findCPU == 0) {
-    
+
         }
         else
           findCPU = 0;
       }
       fclose(fp);
-    
+
       return 0;
     };
 
@@ -237,27 +245,27 @@ public:
       long total = 0;
       long usage = 0;
       int diff_user, diff_system, diff_idle;
-    
+
       diff_user = mOldUserCPU[cpu_idx] - user;
       diff_system = mOldSystemCPU[cpu_idx] - system;
       diff_idle = mOldIdleCPU[cpu_idx] - idle;
-    
+
       total = diff_user + diff_system + diff_idle;
-    
+
       if (total != 0)
         usage = (diff_user * 100) / total;
-    
+
       mOldUserCPU[cpu_idx] = user;
       mOldSystemCPU[cpu_idx] = system;
       mOldIdleCPU[cpu_idx] = idle;
-    
+
       return usage;
     };
 
     int open_sensor(const char *node, sensor_t *sensor) {
       if ((sensor->fd = open(node, O_RDWR)) < 0) {}
       //   qDebug() << node << "Open Fail";
-    
+
       return sensor->fd;
     };
 
@@ -291,7 +299,7 @@ public:
           return -1;
         }
       }
-    
+
       return 0;
     };
 
@@ -304,7 +312,7 @@ public:
         return -1;
       if (open_sensor(DEV_SENSOR_G3D, &sensor[SENSOR_G3D]) < 0)
         return -1;
-    
+
       if (read_sensor_status(&sensor[SENSOR_ARM]))
         return -1;
       if (read_sensor_status(&sensor[SENSOR_MEM]))
@@ -313,7 +321,7 @@ public:
         return -1;
       if (read_sensor_status(&sensor[SENSOR_G3D]))
         return -1;
-    
+
       if (!sensor[SENSOR_ARM].data.enable)
         enable_sensor(&sensor[SENSOR_ARM], 1);
       if (!sensor[SENSOR_MEM].data.enable)
@@ -322,7 +330,7 @@ public:
         enable_sensor(&sensor[SENSOR_KFC], 1);
       if (!sensor[SENSOR_G3D].data.enable)
         enable_sensor(&sensor[SENSOR_G3D], 1);
-    
+
       return 0;
     };
 
@@ -335,7 +343,7 @@ public:
         enable_sensor(&sensor[SENSOR_KFC], 0);
       if (sensor[SENSOR_G3D].data.enable)
         enable_sensor(&sensor[SENSOR_G3D], 0);
-    
+
       close_sensor(&sensor[SENSOR_ARM]);
       close_sensor(&sensor[SENSOR_MEM]);
       close_sensor(&sensor[SENSOR_KFC]);
@@ -344,28 +352,28 @@ public:
 
     int GetINA231(void) {
       int res;
-    
+
       res =  read_sensor(&sensor[SENSOR_ARM]);
       res += read_sensor(&sensor[SENSOR_MEM]);
       res += read_sensor(&sensor[SENSOR_KFC]);
       res += read_sensor(&sensor[SENSOR_G3D]);
-    
+
       armuV = (float)(sensor[SENSOR_ARM].data.cur_uV / 100000) / 10;
       armuA = (float)(sensor[SENSOR_ARM].data.cur_uA / 1000) / 1000;
       armuW = (float)(sensor[SENSOR_ARM].data.cur_uW / 1000) / 1000;
-    
+
       memuV = (float)(sensor[SENSOR_MEM].data.cur_uV / 100000) / 10;
       memuA = (float)(sensor[SENSOR_MEM].data.cur_uA / 1000) / 1000;
       memuW = (float)(sensor[SENSOR_MEM].data.cur_uW / 1000) / 1000;
-    
+
       kfcuV = (float)(sensor[SENSOR_KFC].data.cur_uV / 100000) / 10;
       kfcuA = (float)(sensor[SENSOR_KFC].data.cur_uA / 1000) / 1000;
       kfcuW = (float)(sensor[SENSOR_KFC].data.cur_uW / 1000) / 1000;
-    
+
       g3duV = (float)(sensor[SENSOR_G3D].data.cur_uV / 100000) / 10;
       g3duA = (float)(sensor[SENSOR_G3D].data.cur_uA / 1000) / 1000;
       g3duW = (float)(sensor[SENSOR_G3D].data.cur_uW / 1000) / 1000;
-    
+
       return res;
     };
 
@@ -384,7 +392,7 @@ namespace PMLib
     class OdroidXU3 : public Device {
       public:
         OdroidXU3(string name, string url) :
-            Device(name, url, max_freq, n_lines, pdu, 
+            Device(name, url, max_freq, n_lines, pdu,
             [&] () {
 
             GetNode getNode;
@@ -394,7 +402,7 @@ namespace PMLib
               exit(-1);
             }
 
-            while ( is_running() ){ 
+            while ( is_running() ){
                 auto t1 = system_clock::now();
 
                 getNode.GetINA231();
@@ -411,14 +419,15 @@ namespace PMLib
 
                 auto t2 = system_clock::now();
                 auto dms = duration_cast<microseconds>(t2 - t1);
-		if( dms.count() < (int)(1e6/max_freq) )
+                if( dms.count() < (int)(1e6/max_freq) )
                   this_thread::sleep_for(std::chrono::microseconds((int)(1e6/max_freq) - dms.count()));
             }
 
             getNode.CloseINA231();
-        } ) {};   
+        } ) {};
     };
 
+    /// Registers the JSON config "type": "OdroidXU3".
     static RegisterDevice< OdroidXU3<> > Reg_OdroidXU3("OdroidXU3");
 }
 

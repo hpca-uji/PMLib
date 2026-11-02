@@ -27,6 +27,16 @@
 #ifndef XAVIER_HPP
 #define XAVIER_HPP
 
+/// @file Xavier.hpp
+/// @brief Driver for the NVIDIA Jetson AGX Xavier's two on-board INA3221
+///        power monitors (6 lines; see settings-xavier.json). These expose
+///        voltage (mV) and current (mA) separately through hwmon, so each
+///        sample is computed as V*I and reported in watts, from
+///        <url>/1-004{0,1}/hwmon/hwmon{3,4}/{in,curr}{1..3}_input. The hwmon
+///        indices are hardcoded to how the kernel enumerates them on the
+///        boards this was written for. The config's "url" is the INA3221
+///        driver directory, e.g. /sys/bus/i2c/drivers/ina3221/.
+
 #include <fstream>
 #include <string>
 
@@ -67,9 +77,10 @@ namespace PMLib
                 if( dms.count() < (int)(1e6/max_freq) )
                   this_thread::sleep_for(microseconds((int)(1e6/max_freq) - dms.count()));
             }
-        } ) {};   
+        } ) {};
     };
 
+    /// Registers the JSON config "type": "Xavier".
     static RegisterDevice< Xavier<> > Reg_Xavier("Xavier");
 }
 

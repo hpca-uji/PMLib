@@ -27,6 +27,14 @@
 #ifndef NANO_HPP
 #define NANO_HPP
 
+/// @file Nano.hpp
+/// @brief Driver for the NVIDIA Jetson Nano's on-board INA3221 power
+///        monitor (3 lines; see settings-nano.json for the rail names).
+///        Reads each rail's instantaneous power (mW) from
+///        <url>/6-0040/iio:device0/in_power{0,1,2}_input and reports watts.
+///        The config's "url" is the INA3221 driver directory, e.g.
+///        /sys/bus/i2c/drivers/ina3221x/.
+
 #include <fstream>
 #include <string>
 
@@ -38,22 +46,22 @@ namespace PMLib
     class Nano : public Device {
       public:
         Nano(string name, string url) :
-            Device(name, url, max_freq, n_lines, pdu, 
+            Device(name, url, max_freq, n_lines, pdu,
             [&] () {
-	    
+
             std::string line;
             std::vector<ifstream> files;
-	    for(int i=0; i<3; i++){
+            for(int i=0; i<3; i++){
                files.emplace_back(get_url() + "/6-0040/iio:device0/in_power" + std::to_string(i) + "_input");
-	    }	
-            while ( is_running() ){ 
+            }
+            while ( is_running() ){
                 auto t1 = system_clock::now();
 
-		for( int i=0; i<3; i++ ){
+                for( int i=0; i<3; i++ ){
                     getline(files[i],line);
                     sample[i] = stof(line) / 1e3;
                     files[i].seekg(0);
-		}
+                }
                 yield( sample );
 
                 auto t2 = system_clock::now();
@@ -62,9 +70,10 @@ namespace PMLib
                   this_thread::sleep_for(microseconds((int)(1e6/max_freq) - dms.count()));
             }
 
-        } ) {};   
+        } ) {};
     };
 
+    /// Registers the JSON config "type": "Nano".
     static RegisterDevice< Nano<> > Reg_Nano("Nano");
 }
 

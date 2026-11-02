@@ -27,6 +27,14 @@
 #ifndef ORINNANO_HPP
 #define ORINNANO_HPP
 
+/// @file OrinNano.hpp
+/// @brief Driver for the NVIDIA Jetson Orin Nano's on-board INA3221 power
+///        monitor (4 lines; see settings-orin-nano.json). Each sample is
+///        V*I from <url>/1-0040/hwmon/hwmon3/{in,curr}{1..4}_input, in
+///        watts; the hwmon index is hardcoded to the kernel's enumeration on
+///        the boards this was written for. The config's "url" is the INA3221
+///        driver directory, e.g. /sys/bus/i2c/drivers/ina3221.
+
 #include <fstream>
 #include <string>
 
@@ -38,30 +46,30 @@ namespace PMLib
     class OrinNano : public Device {
       public:
         OrinNano(string name, string url) :
-            Device(name, url, max_freq, n_lines, pdu, 
+            Device(name, url, max_freq, n_lines, pdu,
             [&] () {
-	    std::vector<int> tabla = {1, 2, 3, 4};
+            std::vector<int> tabla = {1, 2, 3, 4};
             std::string line_voltage, line_current;
             std::vector<ifstream> files;
              std::vector<std::string> namefiles;
-	    for(int i=0; i<1; i++){
-	        for(int j=0; j<4; j++){
-		   // Skip non-connected lines. See:
-		  // https://docs.nvidia.com/jetson/archives/r35.3.1/DeveloperGuide/text/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#thermal-management-in-bpmp
-		  // if ( i == 1 && ( j == 0 || j == 2 ) ) continue; 
+            for(int i=0; i<1; i++){
+                for(int j=0; j<4; j++){
+                   // Skip non-connected lines. See:
+                  // https://docs.nvidia.com/jetson/archives/r35.3.1/DeveloperGuide/text/SD/PlatformPowerAndPerformance/JetsonOrinNanoSeriesJetsonOrinNxSeriesAndJetsonAgxOrinSeries.html#thermal-management-in-bpmp
+                  // if ( i == 1 && ( j == 0 || j == 2 ) ) continue;
                    files.emplace_back(get_url() + "/1-004" + std::to_string(i) + "/hwmon/hwmon3" +  "/in" + std::to_string(tabla[j]) + "_input");
                    files.emplace_back(get_url() + "/1-004" + std::to_string(i) + "/hwmon/hwmon3" +  "/curr" + std::to_string(tabla[j]) + "_input");
                    namefiles.emplace_back(get_url() + "/1-004" + std::to_string(i) + "/hwmon/hwmon3" +  "/in" + std::to_string(tabla[j]) + "_input");
                    namefiles.emplace_back(get_url() + "/1-004" + std::to_string(i) + "/hwmon/hwmon3" +  "/curr" + std::to_string(tabla[j]) + "_input");
-		}
-	    }	
+                }
+            }
             while ( is_running() ){
                 auto t1 = system_clock::now();
                 //std::cout <<"==========="<< std::endl;
-		for( int i=0; i<4; i++ ){
-		    
-		    //std::cout << namefiles[i*2] << std::endl;
-		    //std::cout << namefiles[i*2+1] << std::endl;
+                for( int i=0; i<4; i++ ){
+
+                    //std::cout << namefiles[i*2] << std::endl;
+                    //std::cout << namefiles[i*2+1] << std::endl;
                     getline(files[i*2], line_voltage);
                     getline(files[i*2+1], line_current);
                     //std::cout << line_voltage << std::endl;
@@ -70,7 +78,7 @@ namespace PMLib
                     //std::cout << sample[i] << std::endl;
                     files[i*2].seekg(0);
                     files[i*2+1].seekg(0);
-		}
+                }
                 yield( sample );
 
                 auto t2 = system_clock::now();
@@ -79,9 +87,10 @@ namespace PMLib
                   this_thread::sleep_for(microseconds((int)(1e6/max_freq) - dms.count()));
             }
 
-        } ) {};   
+        } ) {};
     };
 
+    /// Registers the JSON config "type": "OrinNano".
     static RegisterDevice< OrinNano<> > Reg_OrinNano("OrinNano");
 }
 

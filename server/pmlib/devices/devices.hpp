@@ -27,19 +27,32 @@
 #ifndef DEVICES_LIST_HPP
 #define DEVICES_LIST_HPP
 
+/// @file devices.hpp
+/// @brief Aggregates every built-in device driver so pmlib_server.cpp only
+///        needs one include. Each header below self-registers its
+///        device type(s) with Device::create_device() via a file-scope
+///        RegisterDevice instance; adding a new driver here is enough to
+///        make it available from the JSON config's "type" field.
+
+// On-board INA power monitors of embedded boards, read through sysfs/ioctl.
 #include "TX2.hpp"
 #include "Nano.hpp"
 #include "Xavier.hpp"
 #include "Orin.hpp"
 #include "OrinNano.hpp"
 #include "OdroidXU3.hpp"
+
+// External power meters over a serial port.
 #include "LMG.hpp"
-#include "ArduPower.hpp" 
+#include "ArduPower.hpp"
 #include "WattsUp.hpp"
 
-// Suport for AccelPower CAPE.
+// Fake device for testing without hardware.
+#include "Dummy.hpp"
+
+// AccelPower CAPE (needs Linux I2C / libi2c, so it is opt-in).
 #ifdef USE_DEVICE_APCAPE
-//#include "APCape.hpp"
+#include "APCape.hpp"
 #endif
 
 #endif
