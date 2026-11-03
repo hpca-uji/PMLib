@@ -43,6 +43,9 @@
 #include "Thor.hpp"
 #include "OdroidXU3.hpp"
 
+// NVIDIA GPUs through NVML (libnvidia-ml.so, loaded at run time).
+#include "NVML.hpp"
+
 // External power meters over a serial port.
 #include "LMG.hpp"
 #include "ArduPower.hpp"

@@ -1,0 +1,17 @@
+{
+	"server_ip"    : "127.0.0.1",
+	"server_port"  : 6526,
+	"server_logfile" : "pmlib_%N.log",
+
+    "computers" : {
+        "DGX-Spark" :    { "ip" : "0.0.0.0" }
+   	},
+
+    "devices" : {
+        "DGX-Spark-GPU" : { "type" : "NVML", "url": "0",
+            "lines" : {
+                "GPU" : { "number" : 0, "description" : "GB10 GPU power draw (NVML, as nvidia-smi power.draw)" }
+            }
+        }
+    }
+}

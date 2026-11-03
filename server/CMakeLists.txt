@@ -58,6 +58,8 @@ target_compile_features(pmlib_server PRIVATE cxx_std_17)
 target_include_directories(pmlib_server PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(pmlib_server PRIVATE ${Boost_LIBRARIES})
 target_compile_definitions(pmlib_server PRIVATE BOOST_LOG_DYN_LINK)
+# dlopen() for devices/NVML.hpp, which loads libnvidia-ml.so at run time.
+target_link_libraries(pmlib_server PRIVATE ${CMAKE_DL_LIBS})
 
 if(USE_STXXL)
     # The vendored STXXL predates CMake's own imported-target support and

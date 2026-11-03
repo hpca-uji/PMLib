@@ -75,6 +75,7 @@ The `"type"` column is the value to use in the JSON configuration.
 | NVIDIA Jetson AGX Orin | `Orin` | 4 | Supported (on-board INA3221 via sysfs) |
 | NVIDIA Jetson Orin Nano | `OrinNano` | 4 | Supported (on-board INA3221 via sysfs) |
 | NVIDIA Jetson AGX Thor | `Thor` | 4 | On-module INA3221 + carrier-board INA238 (total power) via sysfs, **not yet validated on hardware** |
+| NVIDIA GPUs via NVML (e.g. DGX Spark GB10) | `NVML` | 1 | GPU power draw as in `nvidia-smi`; on the DGX Spark, GPU only. **Not yet validated on hardware** |
 | Hardkernel Odroid-XU3 | `OdroidXU3` | 4 | Supported (on-board INA231 sensors) |
 | WattsUp? Pro | `WattsUp` | 1 | Ported from the old Python server, **not yet validated on hardware** |
 | ZES Zimmer LMG450 | `LMG450` | 4 | Ported from the old Python server, **not yet validated on hardware** |
