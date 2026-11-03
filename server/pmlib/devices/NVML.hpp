@@ -43,6 +43,8 @@
 ///        On the DGX Spark (GB10) this is the GPU only: NVIDIA exposes no
 ///        CPU or whole-system power sensor there, so use an external meter
 ///        (e.g. LMG450) on the power supply to measure the whole machine.
+///        NVML also refreshes the GB10's reading only about once per
+///        second, so at 10 Hz consecutive samples repeat that value.
 
 #include <dlfcn.h>
 #include <stdexcept>
