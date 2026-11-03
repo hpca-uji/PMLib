@@ -40,6 +40,7 @@
 #include "Xavier.hpp"
 #include "Orin.hpp"
 #include "OrinNano.hpp"
+#include "Thor.hpp"
 #include "OdroidXU3.hpp"
 
 // External power meters over a serial port.
