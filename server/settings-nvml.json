@@ -1,0 +1,22 @@
+{
+	"server_ip"    : "127.0.0.1",
+	"server_port"  : 6526,
+	"server_logfile" : "pmlib_%N.log",
+
+    "computers" : {
+        "GPU-Server" :    { "ip" : "0.0.0.0" }
+   	},
+
+    "devices" : {
+        "GPU0" : { "type" : "NVML", "url": "0",
+            "lines" : {
+                "GPU" : { "number" : 0, "description" : "GPU 0 power draw (NVML, as nvidia-smi power.draw)" }
+            }
+        },
+        "GPU1" : { "type" : "NVML", "url": "1",
+            "lines" : {
+                "GPU" : { "number" : 0, "description" : "GPU 1 power draw (NVML, as nvidia-smi power.draw)" }
+            }
+        }
+    }
+}

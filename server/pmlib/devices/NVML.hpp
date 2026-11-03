@@ -27,12 +27,14 @@
 
 /// @file NVML.hpp
 /// @brief Driver for the power draw of an NVIDIA GPU as reported by NVML,
-///        the library behind nvidia-smi (1 line, in watts; see
-///        settings-dgx-spark.json). It is the same value as
-///        `nvidia-smi --query-gpu=power.draw`.
+///        the library behind nvidia-smi (1 line, in watts). It is the same
+///        value as `nvidia-smi --query-gpu=power.draw`, and works with any
+///        NVIDIA GPU that nvidia-smi sees.
 ///
 ///        The config's "url" is the GPU index as nvidia-smi numbers it
-///        ("0" for the first or only GPU).
+///        ("0" for the first or only GPU). For several GPUs, declare one
+///        device per GPU (see settings-nvml.json); settings-dgx-spark.json
+///        is the single-GPU case.
 ///
 ///        libnvidia-ml.so.1 is loaded with dlopen() when the device starts,
 ///        so the server builds without CUDA or NVML installed and only
