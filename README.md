@@ -264,13 +264,14 @@ If you use PMLib in academic work, please cite:
 
 ## Contributing
 
-Development happens on the group's GitLab,
-https://lorca.act.uji.es/gitlab/dolzm/pmlib, which is mirrored automatically
-to https://github.com/hpca-uji/PMLib. Push changes and open merge requests on
-GitLab: anything pushed directly to GitHub is overwritten by the mirror.
+Development happens in the group's internal repository, which is mirrored
+automatically to https://github.com/hpca-uji/PMLib. Bug reports and pull
+requests are welcome on GitHub; accepted changes are integrated in the
+internal repository and reach GitHub through the mirror, so a pull request is
+closed rather than merged once its changes appear on `main`.
 
 When changing a device driver under `server/pmlib/devices/`, please say in the
-merge request which physical device you tested it on, since drivers cannot be
+pull request which physical device you tested it on, since drivers cannot be
 exercised in CI.
 
 ## License
