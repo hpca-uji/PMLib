@@ -97,7 +97,7 @@ sudo apt-get install build-essential cmake libboost-all-dev
 ### Server
 
 ```bash
-git clone https://github.com/mdolz/PMLib.git
+git clone https://github.com/hpca-uji/PMLib.git
 cd PMLib/server
 cmake -B build
 cmake --build build -j
@@ -264,9 +264,14 @@ If you use PMLib in academic work, please cite:
 
 ## Contributing
 
-Issues and pull requests are welcome. When changing a device driver under
-`server/pmlib/devices/`, please say in the pull request which physical device
-you tested it on, since drivers cannot be exercised in CI.
+Development happens on the group's GitLab,
+https://lorca.act.uji.es/gitlab/dolzm/pmlib, which is mirrored automatically
+to https://github.com/hpca-uji/PMLib. Push changes and open merge requests on
+GitLab: anything pushed directly to GitHub is overwritten by the mirror.
+
+When changing a device driver under `server/pmlib/devices/`, please say in the
+merge request which physical device you tested it on, since drivers cannot be
+exercised in CI.
 
 ## License
 
