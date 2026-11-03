@@ -12,7 +12,8 @@
             "lines" : {
                 "VDD_GPU"         : { "number" : 0, "description" : "GPU power rail" },
                 "VDD_CPU_SOC_MSS" : { "number" : 1, "description" : "CPU, SOC and memory subsystem combined power rail" },
-                "VIN_SYS_5V0"     : { "number" : 2, "description" : "System 5V power rail" }
+                "VIN_SYS_5V0"     : { "number" : 2, "description" : "System 5V power rail" },
+                "VIN"             : { "number" : 3, "description" : "Total board input power (carrier board INA238)" }
             }
         }
     }

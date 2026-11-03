@@ -26,11 +26,17 @@
 #define THOR_HPP
 
 /// @file Thor.hpp
-/// @brief Driver for the NVIDIA Jetson AGX Thor's on-module INA3221 power
-///        monitor (3 lines, one per INA3221 channel; see
-///        settings-thor.json). Each sample is V*I from
-///        {hwmon}/in{N}_input (mV) and {hwmon}/curr{N}_input (mA), in
-///        watts.
+/// @brief Driver for the NVIDIA Jetson AGX Thor developer kit's power
+///        monitors (4 lines; see settings-thor.json):
+///        - lines 0-2: the three channels of the on-module INA3221
+///          (VDD_GPU, VDD_CPU_SOC_MSS, VIN_SYS_5V0), each V*I from
+///          {hwmon}/in{N}_input (mV) and {hwmon}/curr{N}_input (mA);
+///        - line 3: total board input power, from the carrier board's
+///          INA238 ({hwmon}/power1_input, in uW). It is looked up by its
+///          hwmon name ("ina238") on the same I2C bus as the INA3221
+///          (2-0044 on the developer kit); if there is none, the line
+///          reads 0 and a warning is logged.
+///        All values are in watts.
 ///
 ///        The config's "url" is the INA3221's I2C device directory, e.g.
 ///        /sys/bus/i2c/devices/2-0040 on the developer kit. Unlike the
@@ -41,7 +47,7 @@
 ///
 ///        The rail on each channel is logged at start-up (from
 ///        in{N}_label), so the line names in the JSON can be checked
-///        against the board. Not yet validated on hardware.
+///        against the board.
 
 #include <filesystem>
 #include <fstream>
@@ -55,7 +61,7 @@ using namespace std::chrono;
 
 namespace PMLib
 {
-    template <int n_lines = 3, int max_freq = 10, bool pdu = false>
+    template <int n_lines = 4, int max_freq = 10, bool pdu = false>
     class Thor : public Device {
 
         /// Returns the hwmon directory for the INA3221 at @p url.
@@ -72,6 +78,28 @@ namespace PMLib
                                      " (expected e.g. /sys/bus/i2c/devices/2-0040)");
         }
 
+        /// Returns the hwmon directory of the INA238 on the same I2C bus as
+        /// the INA3221 hwmon directory @p ina3221, or "" if there is none.
+        static std::string find_ina238(const std::string &ina3221) {
+            namespace fs = std::filesystem;
+            std::error_code ec;
+            // {bus}/2-0040/hwmon/hwmonX -> {bus}
+            fs::path bus = fs::canonical(ina3221, ec).parent_path().parent_path().parent_path();
+            if ( ec || !fs::is_directory(bus) ) return "";
+            for ( auto &dev : fs::directory_iterator(bus, ec) ) {
+                fs::path base = dev.path() / "hwmon";
+                if ( !fs::is_directory(base, ec) ) continue;
+                for ( auto &hw : fs::directory_iterator(base, ec) ) {
+                    std::string name;
+                    std::ifstream name_file(hw.path() / "name");
+                    if ( name_file && getline(name_file, name) && name == "ina238" &&
+                         fs::exists(hw.path() / "power1_input") )
+                        return hw.path().string();
+                }
+            }
+            return "";
+        }
+
       public:
         Thor(string name, string url) :
             Device(name, url, max_freq, n_lines, pdu,
@@ -79,7 +107,7 @@ namespace PMLib
 
             const std::string hwmon = find_hwmon(get_url());
             std::vector<ifstream> files;
-            for ( int ch = 1; ch <= n_lines; ch++ ) {
+            for ( int ch = 1; ch <= 3; ch++ ) {
                 const std::string n = std::to_string(ch);
                 std::string label = "(no label)";
                 std::ifstream label_file(hwmon + "/in" + n + "_label");
@@ -93,16 +121,32 @@ namespace PMLib
                     throw std::runtime_error("Thor: cannot read channel " + n + " in " + hwmon);
             }
 
-            std::string line_voltage, line_current;
+            const std::string ina238 = find_ina238(hwmon);
+            ifstream total;
+            if ( ina238.empty() ) {
+                CLOG_WARN << "Thor " << get_name() << ": no INA238 found next to " << hwmon
+                          << "; line 3 (total board power) will read 0" << endl;
+            } else {
+                total.open(ina238 + "/power1_input");
+                CLOG_INFO << "Thor " << get_name() << ": line 3 = INA238 total input power ("
+                          << ina238 << ")" << endl;
+            }
+
+            std::string line_voltage, line_current, line_power;
             while ( is_running() ){
                 auto t1 = system_clock::now();
 
-                for ( int i = 0; i < n_lines; i++ ){
+                for ( int i = 0; i < 3; i++ ){
                     getline(files[i*2], line_voltage);
                     getline(files[i*2+1], line_current);
                     sample[i] = ( stof(line_voltage) * stof(line_current) ) / 1e6;
                     files[i*2].clear();   files[i*2].seekg(0);
                     files[i*2+1].clear(); files[i*2+1].seekg(0);
+                }
+                if ( total.is_open() ) {
+                    getline(total, line_power);
+                    sample[3] = stof(line_power) / 1e6;
+                    total.clear(); total.seekg(0);
                 }
                 yield( sample );
 
